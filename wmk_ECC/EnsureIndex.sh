@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+db.operator_relation.ensureIndex({_id: 1})
+db.operator_object.ensureIndex({classID: 1, id: 1, serverNO: 1}, {name: 'op_id', unique: true})
+db.operator_object.ensureIndex({'restData.community': 1}, {name: 'op_community'})
+
+db.relation.ensureIndex({_id: 1})
+db.nameobject.ensureIndex({classID: 1, id: 1, serverNO: 1}, {name: 'no_id', unique: true})
+db.nameobject.ensureIndex({fullName: 1}, {name: 'no_name'})
+db.nameobject_config.ensureIndex({classID: 1, id: 1, serverNO: 1}, {name: 'no_id'})
+db.nameobject_config.ensureIndex({key: 1}, {name: 'cfg_key'})
+db.device_type.ensureIndex({_id: 1})
+db.device_type.ensureIndex({system: 1, group: 1, id: 1})
+
+db.collect_relation.ensureIndex({_id: 1})
+db.collect_object.ensureIndex({classID: 1, id: 1, serverNO: 1}, {name: 'cno_id', unique: true})
+db.collect_device_point.ensureIndex({serverNO: 1, classID: 1, id: 1}, {name: 'cno_id'})
+db.collect_config.ensureIndex({classID: 1, id: 1, serverNO: 1}, {name: 'collector_id', unique: true})
+db.collect_device_type.ensureIndex({_id: 1})
+
+db.alarm.ensureIndex({classID: 1, id: 1, serverNO: 1}, {name: 'alarm_id', unique: true})
+db.alarm.ensureIndex({third_party_id: 1}, {name: 'third_party_id', unique: true, partialFilterExpression: {third_party_id: {$exists: true}}})
+db.alarm.ensureIndex({'source.classID': 1, 'source.id': 1, 'source.serverNO': 1}, {name: "alarm_source"})
+db.alarm.ensureIndex({serverNO: 1, area: 1, isFiltered: 1}, {name: 'alarm_area'})
+db.alarm.ensureIndex({isConfirmed: 1, isForce: 1, isHangup: 1, isFiltered: 1, type: 1, serverNO: 1, area: 1}, {name: 'alarm_state'})
+db.alarm.ensureIndex({startTime: 1}, {name: 'alarm_start_time'})
+db.alarm.ensureIndex({'parent.serverNO': 1, 'parent.classID': 1, 'parent.id': 1}, {name: 'alarm_parent'})
+db.alarm.ensureIndex({time: -1}, {name: 'alarm_time'})
+db.alarm.ensureIndex({open_id: 1}, {name: 'alarm_open_id'})
+
+db.alarm_type.ensureIndex({id: 1}, {name: 'alarm_type_id', unique: true})
+
+db.devicepoint.ensureIndex({deviceClassID: 1, deviceID: 1, pointIndex: 1, deviceServerNO: 1}, {name: "dp_source", unique: true})
+db.devicepoint.ensureIndex({'binding.serverNO': 1, 'binding.classID': 1, 'binding.id': 1, 'binding.pointIndex': 1}, {name: "bdp_source"})
+db.devicepoint.ensureIndex({pointType: 1}, {name: "dp_type"})
+db.devicepoint.ensureIndex({'config.alarm.convergence': 1}, {name: "dp_convergence"})
+db.devicepoint.ensureIndex({'config.alarm.id': 1}, {name: "point_alarm_id"})
+
+db.asset.ensureIndex({aNO: 1}, {name: 'asset_id', unique: true})
+db.asset.ensureIndex({brand: 1}, {name: 'asset_brand'})
+db.asset.ensureIndex({name: 1}, {name: 'asset_name'})
+db.asset.ensureIndex({'type.system': 1, 'type.group': 1}, {name: 'asset_type'})
+db.asset.ensureIndex({supplier: 1}, {name: 'asset_supplier'})
+db.asset.ensureIndex({state: 1, _state: 1}, {name: 'asset_state'})
+db.asset.ensureIndex({'region.serverNO': 1, 'region.classID': 1, 'region.id': 1}, {name: 'asset_state'})
+
+db.asset_type.ensureIndex({_id: 1})
+db.supplier.ensureIndex({_id: 1})
+db.attribute.ensureIndex({_id: 1})
+db.parts.ensureIndex({_id: 1})
+db.parts_type.ensureIndex({_id: 1})
+
+db.order_template.ensureIndex({id: 1}, {name: 'order_template_id'})
+db.order.ensureIndex({createTime: 1}, {name: 'order_create_time'})
+db.order.ensureIndex({startTime: 1}, {name: 'order_start_time'})
+db.order.ensureIndex({classID: 1, id: 1, serverNO: 1}, {name: 'order_id', unique: true})
+db.order.ensureIndex({users: 1, startTime: -1}, {name: 'order_user'})
+db.order.ensureIndex({state: 1, classID: 1}, {name: 'order_state'})
+db.order.ensureIndex({'restData.planTime': 1, 'restData.participant': 1}, {name: 'drill_order', partialFilterExpression: {classID: 2202}})
+db.order.ensureIndex({'restData.planTime': 1, 'restData.asset.name': 1}, {name: 'asset_order', partialFilterExpression: {classID: 2203}})
+
+db.work_log.ensureIndex({logID: 1}, {name: 'work_log_id', unique: true})
+db.work_log.ensureIndex({serverNO: 1, classID: 1, id: 1, modifyTime: -1}, {name: 'work_log_user'})
+
+db.work_sheet.ensureIndex({sheetID: 1}, {name: 'work_sheet_id', unique: true})
+db.work_sheet.ensureIndex({state: 1, serverNO: 1, classID: 1, id: 1, finishTime: -1}, {name: 'work_sheet_group'})
+
+db.objectids.ensureIndex({_id: 1})
+db.privilege.ensureIndex({_id: 1})
+db.config_file.ensureIndex({_id: 1})
+db.report_template.ensureIndex({_id: 1})
+db.link_control.ensureIndex({id: 1})
+db.role.ensureIndex({_id: 1}, {name: 'role_id', unique: true})

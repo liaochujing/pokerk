@@ -1,0 +1,269 @@
+syntax = "proto3";
+
+package central;
+
+service Notify {
+    rpc NotifyMsg (NotifyMessage) returns (NotifyResponse){}
+}
+
+message NotifyMessage {
+   int32 msgtype = 1;
+   string clientId =2;
+   oneof notifyinfo {
+        AlarmCommon almcom = 3;
+        AlarmHangup almhang = 4;
+        AlarmConvergenced almcover =5;
+        Identity lstobject = 6;
+        AlarmStarChanged almstarchan = 7;
+        OrderGenerated ordgen = 8;
+        ObjectChange objchan = 9;
+        Relation relations = 10;
+        DevicePoint devpoint =11;
+        ObjectModified objmod = 12;
+        CollectDevicePointChanged colledevpointchan = 13;
+        AssertChange astchan = 14;
+        AssertDelete astdel= 15;
+        AlarmTypeChanged almtypechan = 16;
+        AlarmTypeDeleted almtypedel = 17;
+        DeviceTypeChanged devtypechan = 18;
+        DeviceType devtypedel =19;
+        CollectDeviceTypeChanged colldevtypechan =20;
+        CollectDeviceTypeDeleted colldevtypedel = 21;
+        SyncData syncdata = 22;
+        AlarmGenerated almgen = 23;
+        string alarmJson = 24;
+    }
+}
+
+message NotifyResponse {
+}
+//########告警##############################
+//告警产生
+message AlarmGenerated {
+    uint32 serverNO =1;
+    uint32 classID =2;
+    double id = 3;
+    Point source =4;
+    uint32 area = 5;
+    int32 type = 6;
+    int32 level = 7;
+    string desc = 8;
+    double startTime = 9;
+    string startJson = 10;
+    double time = 11;
+    string third_party_id = 12;
+    string open_id = 13;
+    SPoint vSource = 14;
+    int32 isHangup = 15;
+    string hangupJson = 16;
+}
+
+message Point {
+    uint32 serverNO = 1;
+    uint32 classID =2;
+    double id = 3;
+    uint32 pointIndex = 4;
+}
+
+message SPoint {
+    double id = 1;
+    uint32 pointIndex = 2;
+}
+
+//告警结束 告警确认 告警强制结束
+message AlarmCommon{
+    uint32 serverNO =1;
+    uint32 classID =2;
+    double id = 3;
+    string optionJson =4;
+    int32 finished = 5;
+    double time = 6;
+    SPoint vSource = 7;
+}
+//告警挂起 告警解挂
+message AlarmHangup{
+    uint32 serverNO =1;
+    uint32 classID =2;
+    double id = 3;
+    string optionJson =4;
+    double time = 5;
+}
+//告警收敛变更
+message AlarmConvergenced{
+    uint32 serverNO =1;
+    uint32 classID =2;
+    double id = 3;
+    repeated Identity list= 4;
+    double time = 5;
+}
+message Identity{
+    uint32 serverNO =1;
+    uint32 classID =2;
+    double id = 3;
+}
+//关注告警变更
+message AlarmStarChanged{
+    uint32 serverNO =1;
+    uint32 classID =2;
+    double id = 3;
+    int32 star = 4;
+    double time = 5;
+}
+
+//########工单##############################
+//告警工单产生
+message OrderGenerated {
+    uint32 serverNO =1;
+    uint32 classID =2;
+    double id = 3;
+    Identity alarm = 4;
+}
+
+//########逻辑对象  操作员 ##############################
+//对象新增 对象修改 // 人员相关对象新增 //采集对象新增
+message ObjectChange {
+    Identity container =1;
+    Obj object = 2;
+    string pointsJson = 3;
+}
+
+//
+message Obj {
+    uint32 serverNO =1;
+    uint32 classID =2;
+    double id = 3;
+    string fullName = 4;
+    string name = 5;
+    string description = 6;
+    string restDataJson = 7;
+    double createTime = 8;
+    double modifyTime = 9;
+}
+
+//对象关系(添加 删除)
+message Relation {
+    uint32 serverNO = 1;
+    uint32 classID = 2;
+    double id = 3;
+    uint32 childServerNO =4;
+    uint32 childClassID = 5;
+    double childID = 6;
+    double time = 7;
+}
+
+//设备点配置变更
+message DevicePoint {
+    uint32 serverNO = 1;
+    uint32 classID = 2;
+    double id = 3;
+    string pointsJson = 4;
+    int32 reload =5 ;
+    double time = 6;
+    DeviceType type = 7;
+}
+
+message DeviceType {
+    uint32 system = 1;
+    uint32 group = 2;
+    uint32 id = 3;
+}
+
+//操作员
+//人员操作对象新增
+//同ObjectChange
+
+//人员操作对象删除
+//同listinfo
+
+//人员操作对象修改
+message ObjectModified{
+    Obj object = 1;
+}
+
+//采集对象
+//采集对象新增
+// 同ObjectChange
+
+//采集对象删除
+//同listinfo
+
+//采集对象修改
+//同ObjectChange
+
+//采集设备点变更
+message CollectDevicePointChanged{
+    uint32 serverNO = 1;
+    uint32 classID = 2;
+    double id = 3;
+    string pointsJson = 4;
+    double time = 5;
+}
+
+//###################资产#################
+//资产新增 修改
+message AssertChange{
+    string aNO=1;
+    string type =2;
+    string name=3;
+    string brand=4;
+    string model=5;
+    int32 ratedPower=6;
+    int32 supplier=7;
+}
+//资产删除
+message AssertDelete{
+    string aNO = 1;
+}
+
+//######################管理################
+//重启
+//未使用
+
+//告警条件变更
+message AlarmTypeChanged{
+    uint32 id =1;
+    string name =2;
+    string conditionJson =3;
+    string optionJson =4;
+    string configJson=5;
+    double time = 6;
+}
+
+//告警条件删除
+message AlarmTypeDeleted{
+    uint32 id =1;
+}
+
+//设备类型变更
+message DeviceTypeChanged {
+    uint32 system = 1;
+    string systemName = 2;
+    uint32 group = 3;
+    string groupName =4;
+    uint32 id = 5;
+    string name = 6;
+    string desc = 7;
+    string pointsListJson = 8;
+    string configJson = 9;
+    double time = 10;
+}
+
+message CollectDeviceTypeChanged {
+    uint32 id = 1;
+    string name = 2;
+    string desc = 3;
+    string pointsListJson = 4;
+    string configJson = 5;
+    string data = 6;
+    double time =7;
+}
+
+//采集设备类型删除
+message CollectDeviceTypeDeleted{
+    uint32 id = 1;
+}
+
+//同步数据
+message SyncData{
+    repeated string itemJson =1;
+}

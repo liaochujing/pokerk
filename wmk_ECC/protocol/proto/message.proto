@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package message;
+
+service Message {
+    rpc Send (SendRequest) returns (SendResponse){}
+}
+
+message SendRequest {
+    int32 mode = 1;//发送方式（先固定：1，方便以后可能会扩展）
+    string recipient = 2;//接收人
+    string message = 3;//短信内容
+}
+
+message SendResponse {
+    int32 status = 1;
+    string msg = 2;
+}

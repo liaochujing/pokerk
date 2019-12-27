@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package central;
+
+// The greeting service definition.
+service Central {
+  // Sends a Command
+  rpc Register(RegistRequest) returns (RegistResponse){}    //注册
+  rpc KeepLive(KeepAliveRequest) returns (KeepAliveReponse) {}   //保活
+  rpc SyncData(NullRequest) returns (NullResponse) {}  //同步数据
+  rpc SetMode(ModeRequest) returns (NullResponse) {}   //设置模式
+  rpc GetServerInfo (NullRequest) returns (JsonResponse) {}  //服务器信息获取, json: [{serverNO: 0, classID: 0, id: 0, info: {version: '', start: '', end: ''}}]
+  rpc GetServerState(NullRequest)returns(JsonResponse) {}  //服务器状态, json: [{serverNO: 0, classID: 0, id: 0, connectioons: [1,2,3]}, {serverNO: 0, classID: 0, id: 0, connectioons: [1,2,3]}]
+
+//  改掉用ReqData
+//  rpc SetPoint(SetPointRequest)returns(NullResponse) {}  //控制
+//  rpc GetAuthTime(NullRequest)returns(JsonResponse) {}  //获取服务器授权时间
+//  rpc GetAuthFile(GetAuthFileRequest)returns(JsonResponse) {}  //获取服务器授权文件
+//  rpc SetAuthFile(SetAuthFileRequest)returns(NullResponse) {}  //上传服务器授权文件
+
+  rpc Request (JsonRequest) returns (JsonResponse) {}  // 转发到业务中控模块
+  rpc ReqData (JsonRequest) returns (JsonResponse) {}  // 转发到数据中控模块
+  rpc ReqAlarm(JsonRequest) returns (JsonResponse) {}  // 转发到告警模块
+  rpc ReqReport(JsonRequest) returns (JsonResponse) {} //转发到报表模块
+}
+
+message RegistRequest{
+    string ip = 1;
+    int32 port = 2;
+    int32 clientType = 3;
+    repeated int32 regtype = 4;
+}
+
+message RegistResponse{
+    int32 status = 1;
+    string msg =2;
+    string clientId=3;
+    string centralClientId=4;
+}
+
+message KeepAliveRequest {
+    string clientId = 1;
+}
+
+message ModeRequest {
+    uint32 mode = 1;
+}
+
+message KeepAliveReponse {
+    int32 status = 1;
+    string msg =2;
+    string version = 3;
+    uint32 mode = 4;
+}
+
+//message SetPointRequest{
+//    uint32 serverNO = 1;
+//    uint32 classID = 2;
+//    uint64 id = 3;
+//    uint32 pointIndex = 4;
+//    double pointValue = 5;
+//}
+//
+//message GetAuthFileRequest{
+//    int32 type = 1;
+//}
+//
+//message SetAuthFileRequest{
+//    string file = 1;
+//}
+
+message NullRequest {
+    string clientId = 1;
+}
+
+message NullResponse {
+    int32 status = 1;
+    string msg =2;
+}
+
+message JsonRequest {
+    string clientId = 1;
+    int32 cmd = 2;
+    string json = 3;
+}
+
+message JsonResponse {
+    int32 status = 1;
+    string msg =2;
+    string json = 3;
+}
